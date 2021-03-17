@@ -1,5 +1,8 @@
 import { useState } from 'react';
+
 import TableComponent from './Table';
+import FormComponent from './Form';
+
 import './App.css';
 /*
 React Team Challenge: Movie List - Part One
@@ -16,7 +19,7 @@ Between the two partners:
 
 let movieData = [
   {
-    id: 0,
+    id: 100,
     name: "Howl's Moving Castle",
     year: 2004,
     genre: 'Animation, Adventure, & Family',
@@ -139,6 +142,73 @@ let movieData = [
 
 const App = () => {
   const [movies, setMovies] = useState(movieData);
+  const [movie, setMovie] = useState({
+    id: '',
+    name: '',
+    year: '',
+    genre: '',
+    description: '',
+    imdbRating: '',
+    imageLink: '',
+    imdbLink: '',
+  });
+
+  /*
+  save movie function adds a unique id
+  populates movies array with new movie using setMovie()
+  clears movie form with setMovie()
+
+   let updatedMovies = movies.filter(m => m.id !== movie.id);
+      updatedMovies.push(movie);
+      setMovies(updatedMovies);
+
+      1. rewrite my update code so that when an object is updated
+      it saves back to the same index in the movies array
+      2. use this link as a reference: https://dev.to/andyrewlee/cheat-sheet-for-updating-objects-and-arrays-in-react-state-48np
+    
+  */
+  const saveMovie = () => {
+    // Check to see if a movie has an id
+    // If it does, then update the movie
+    // if it doesn't then save it as a new movie
+    // debugger;
+    if (movie.id) {
+      // replace our original movie details with updated details
+      // push back into our array
+      console.log(`the movie has an id, the name is ${movie.name}`);
+      let updatedMovies = movies.filter(m => m.id !== movie.id);
+      updatedMovies.push(movie);
+      setMovies(updatedMovies);
+    } else {
+      // treat as new movie
+      // create unique id
+      // move into movies array
+      movie.id = Date.now();
+      setMovies([...movies, movie]);
+    }
+
+    // console.log('gets to save movie in app component', movie);
+    // Clear my form
+    setMovie({
+      id: '',
+      name: '',
+      year: '',
+      genre: '',
+      description: '',
+      imdbRating: '',
+      imageLink: '',
+      imdbLink: '',
+    });
+  };
+
+  const removeMovie = movieId => {
+    if (window.confirm('Are you sure you want to remove this movie?')) {
+      let newMovies = movies.filter(m => m.id !== movieId);
+      console.log(newMovies);
+      setMovies(newMovies);
+    }
+  };
+
   return (
     <div className='container'>
       <div className='row text-center'>
@@ -147,7 +217,12 @@ const App = () => {
         </div>
       </div>
 
-      <TableComponent movies={movies} />
+      <FormComponent movie={movie} setMovie={setMovie} saveMovie={saveMovie} />
+      <TableComponent
+        movies={movies}
+        removeMovie={removeMovie}
+        setMovie={setMovie}
+      />
     </div>
   );
 };
