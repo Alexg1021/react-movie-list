@@ -13,10 +13,9 @@
   },
     */
 
-const FormComponent = ({ movie, setMovie, saveMovie }) => {
+const FormComponent = ({ movie, setMovie, saveMovie, clearForm }) => {
   const handleSubmit = event => {
     event.preventDefault();
-    console.log('submit runs! what is movie?', movie);
     saveMovie();
 
     // create a new movie object
@@ -116,8 +115,16 @@ const FormComponent = ({ movie, setMovie, saveMovie }) => {
               />
             </div>
           </div>
-
-          <button className='btn btn-primary btn-block'>Save</button>
+          <div className='row'>
+            <div className='col'>
+              <button className='btn btn-primary btn-block'>Save</button>
+            </div>
+            <div className='col'>
+              <button className='btn btn-warning btn-block' onClick={clearForm}>
+                Cancel
+              </button>
+            </div>
+          </div>
         </form>
       </div>
     </div>

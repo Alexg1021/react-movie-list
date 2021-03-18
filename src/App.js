@@ -19,18 +19,6 @@ Between the two partners:
 
 let movieData = [
   {
-    id: 100,
-    name: "Howl's Moving Castle",
-    year: 2004,
-    genre: 'Animation, Adventure, & Family',
-    description:
-      'When an unconfident young woman is cursed with an old body by a spiteful witch, her only chance of breaking the spell lies with a self-indulgent yet insecure young wizard and his companions in his legged, walking castle.',
-    imdbRating: 8.2,
-    imageLink:
-      'https://m.media-amazon.com/images/M/MV5BNmM4YTFmMmItMGE3Yy00MmRkLTlmZGEtMzZlOTQzYjk3MzA2XkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_UX182_CR0,0,182,268_AL_.jpg',
-    imdbLink: 'https://www.imdb.com/title/tt0347149/?ref_=nv_sr_srsg_0',
-  },
-  {
     id: 1,
     name: 'Spirited Away',
     year: 2001,
@@ -138,10 +126,24 @@ let movieData = [
       'https://m.media-amazon.com/images/M/MV5BNWE4OTNiM2ItMjY4Ni00ZTViLWFiZmEtZGEyNGY2ZmNlMzIyXkEyXkFqcGdeQXVyMDU5NDcxNw@@._V1_UX182_CR0,0,182,268_AL_.jpg',
     imdbLink: 'https://www.imdb.com/title/tt0107688/?ref_=rvi_tt',
   },
+  {
+    id: 100,
+    name: "Howl's Moving Castle",
+    year: 2004,
+    genre: 'Animation, Adventure, & Family',
+    description:
+      'When an unconfident young woman is cursed with an old body by a spiteful witch, her only chance of breaking the spell lies with a self-indulgent yet insecure young wizard and his companions in his legged, walking castle.',
+    imdbRating: 8.2,
+    imageLink:
+      'https://m.media-amazon.com/images/M/MV5BNmM4YTFmMmItMGE3Yy00MmRkLTlmZGEtMzZlOTQzYjk3MzA2XkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_UX182_CR0,0,182,268_AL_.jpg',
+    imdbLink: 'https://www.imdb.com/title/tt0347149/?ref_=nv_sr_srsg_0',
+  },
 ];
 
 const App = () => {
+  const [alert, setAlert] = useState(false);
   const [movies, setMovies] = useState(movieData);
+  // let movies = [movieData]
   const [movie, setMovie] = useState({
     id: '',
     name: '',
@@ -171,14 +173,28 @@ const App = () => {
     // Check to see if a movie has an id
     // If it does, then update the movie
     // if it doesn't then save it as a new movie
-    // debugger;
     if (movie.id) {
+      // Merhawit index method
+      let i = movies.findIndex(m => m.id === movie.id);
+      let updatedMovies = movies.filter(m => m.id !== movie.id);
+
+      updatedMovies.splice(i, 0, movie);
+      setMovies(updatedMovies);
       // replace our original movie details with updated details
       // push back into our array
-      console.log(`the movie has an id, the name is ${movie.name}`);
-      let updatedMovies = movies.filter(m => m.id !== movie.id);
-      updatedMovies.push(movie);
-      setMovies(updatedMovies);
+      // step 1: creating a new array minus my updated movie
+      // [0,1,3,4,5,6]
+      // let updatedMovies = movies.filter(m => m.id !== movie.id);
+      // [0,1,3,4,5,6,2]
+      // updatedMovies.push(movie);
+
+      // [1,2,3,4,5,6]
+      // setting movies = updatedMovies
+      // Brittney Sort Method
+      // updatedMovies.sort((movieA, movieB) => {
+      //   return movieA.id - movieB.id;
+      // });
+      // setMovies(updatedMovies);
     } else {
       // treat as new movie
       // create unique id
@@ -186,9 +202,18 @@ const App = () => {
       movie.id = Date.now();
       setMovies([...movies, movie]);
     }
+    showAlert();
+    clearForm();
+  };
 
-    // console.log('gets to save movie in app component', movie);
-    // Clear my form
+  const showAlert = () => {
+    setAlert(true);
+    setTimeout(() => {
+      setAlert(false);
+    }, 2000);
+  };
+
+  const clearForm = () => {
     setMovie({
       id: '',
       name: '',
@@ -211,13 +236,30 @@ const App = () => {
 
   return (
     <div className='container'>
+      {alert ? (
+        <div className='row'>
+          <div className='col'>
+            <div class='alert alert-success' role='alert'>
+              Successfully saved movie!
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div></div>
+      )}
+
       <div className='row text-center'>
         <div className='col'>
           <h2>Welcome to My Movie List!</h2>
         </div>
       </div>
 
-      <FormComponent movie={movie} setMovie={setMovie} saveMovie={saveMovie} />
+      <FormComponent
+        movie={movie}
+        setMovie={setMovie}
+        saveMovie={saveMovie}
+        clearForm={clearForm}
+      />
       <TableComponent
         movies={movies}
         removeMovie={removeMovie}
